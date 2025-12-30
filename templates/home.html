@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">¡Bienvenido, {{ user.username }}!</h1>
+    <p class="lead">Esta es la plataforma para programar respaldos remotos entre servidores.</p>
+    <hr class="my-4">
+    <p>Utiliza el menú de navegación para gestionar tus servidores y configuraciones de respaldo.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'server_list' %}" role="button">Ver Mis Servidores</a>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Servidor{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">Editar Servidor: {{ server.dominio_o_ip }}</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="dominio_o_ip" class="form-label">Dominio o IP</label>
+                        <input type="text" id="dominio_o_ip" name="dominio_o_ip" class="form-control" value="{{ server.dominio_o_ip }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="usuario_servidor" class="form-label">Usuario del Servidor</label>
+                        <input type="text" id="usuario_servidor" name="usuario_servidor" class="form-control" value="{{ server.usuario_servidor }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contrasena_bot" class="form-label">Nueva Contraseña del Bot</label>
+                        <input type="password" id="contrasena_bot" name="contrasena_bot" class="form-control">
+                        <div class="form-text">Deja este campo en blanco para no cambiar la contraseña.</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        <a href="{% url 'server_list' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
