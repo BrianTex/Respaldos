@@ -37,7 +37,10 @@
                             <span class="nav-link">Hola, {{ user.username }}</span>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Cerrar Sesión</a>
+                            <form action="{% url 'logout' %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-link btn btn-link" style="display: inline; cursor: pointer;">Cerrar Sesión</button>
+                            </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
