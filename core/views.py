@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from core.models import Server
+from core.models import Server,Reporte
 from django.contrib import messages
+from django.http import JsonResponse
 
 
 @login_required
@@ -77,3 +78,47 @@ def delete_server(request, pk):
         messages.success(request, 'Servidor eliminado exitosamente.')
         return redirect('server_list')
     return render(request, 'delete_server_confirm.html', {'server': server})
+
+#View que recibe la informaciòn mandada por el script 
+def reportar(request,server_id):
+    if request.method=='POST':
+        token=request.POST.get('Autorizacion')
+        try:
+            servidor=Server.objects.get(id=server_id)
+            if servidor.password_bot!=token:
+                return JsonResponse({'error': 'Token inválido'}, status=403)
+            
+            estado=request.POST.get('estado')
+            archivo=request.POST.get('archivo')
+            fecha=request.POST.get('fecha')
+
+            Reporte.objects.create(
+                estado=estado,
+                archivo=archivo,
+                fecha=fecha,
+                idServidor=server_id
+            )
+            return JsonResponse({'status': 'recibido'})
+        except Server.DoesNotExist:
+            return JsonResponse({'error': 'Servidor no encontrado'}, status=404)
+
+
+def serializar_a_json(querySet):
+    datos = []
+    for registro in querySet:
+        d = {}
+        d['estado'] = registro.estado
+        d['archivo'] = registro.address
+        d['fecha']  = registro.city
+        d['idServer'] = registro.idServer
+        datos.append(d)
+    return datos
+
+def listar_reportes(request):
+    reportes = Reporte.objects.all()
+    return JsonResponse(serializar_a_json(reportes), safe=False)
+
+@login_required
+def desplegar_async(request):
+    t = 'reportes.html'
+    return render(request, t)

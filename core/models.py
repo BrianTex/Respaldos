@@ -14,3 +14,9 @@ class Server(models.Model):
     class Meta:
         verbose_name = "Servidor"
         verbose_name_plural = "Servidores"
+    
+class Reporte(models.Model):
+    estado= models.CharField(max_length=100,verbose_name='Estado del servidor')
+    archivo=models.CharField(max_length=50,verbose_name='Nombre del archivo o directorio')
+    fecha=models.DateField()
+    idServer=models.ForeignKey(Server, on_delete=models.CASCADE)
