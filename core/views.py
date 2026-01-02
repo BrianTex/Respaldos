@@ -4,6 +4,7 @@ from core.models import Server,Reporte
 from django.contrib import messages
 from django.http import JsonResponse
 
+from .utils import automatizarServidor
 
 @login_required
 def home(request):
@@ -32,12 +33,12 @@ def add_server(request):
             })
         
         # Creación del objeto
-        Server.objects.create(
+        nuevoServer=Server.objects.create(
             dominio_o_ip=dominio,
             usuario_servidor=usuario,
             contrasena_bot=contrasena
         )
-        
+        automatizarServidor(nuevoServer)
         messages.success(request, 'Servidor añadido exitosamente.')
         return redirect('server_list')
 
