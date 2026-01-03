@@ -4,3 +4,8 @@
 /lib
 /lib64
 pyvenv.cfg
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+db.sqlite3
