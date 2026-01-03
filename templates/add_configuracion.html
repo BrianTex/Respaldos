@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-dark">Configurar Automatización de Respaldo</h2>
+        <a href="{% url 'server_list' %}" class="btn btn-outline-secondary">Volver</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Servidor de Origen (Donde están los archivos)</label>
+                        <select name="servidor_origen" class="form-select border-success" required>
+                            <option value="">Seleccione el servidor...</option>
+                            {% for s in servidores %}
+                                <option value="{{ s.id }}">{{ s.nombre }} — {{ s.ip }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Servidor de Destino (Donde se guardará)</label>
+                        <select name="servidor_destino" class="form-select border-success" required>
+                            <option value="">Seleccione el servidor...</option>
+                            {% for s in servidores %}
+                                <option value="{{ s.id }}">{{ s.nombre }} — {{ s.ip }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Directorio de Origen</label>
+                        <input type="text" name="directorio_origen" class="form-control" placeholder="/home/admin/web_data" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Directorio de Destino</label>
+                        <input type="text" name="directorio_destino" class="form-control" placeholder="/backups/daily" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Frecuencia de Ejecución (Cron)</label>
+                    <input type="text" name="frecuencia_cron" class="form-control" placeholder="0 0 * * *" required>
+                    <div class="form-text">Usa el formato estándar de Linux (Minuto Hora Día Mes Día_Semana).</div>
+                </div>
+
+                <div class="d-grid mt-5">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-check-circle"></i> Guardar y Activar Automatización
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

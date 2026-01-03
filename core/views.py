@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from core.models import Server,Reporte
 from django.contrib import messages
 from django.http import JsonResponse
-
+from .models import ConfiguracionRespaldo
 from .utils import automatizarServidor
 
 @login_required
@@ -123,3 +123,29 @@ def listar_reportes(request):
 def desplegar_async(request):
     t = 'reportes.html'
     return render(request, t)
+
+@login_required
+def add_configuracion(request):
+    if request.method == 'POST':
+        servidor_origen_id = request.POST.get('servidor_origen')
+        servidor_destino_id = request.POST.get('servidor_destino')
+        dir_origen = request.POST.get('directorio_origen')
+        dir_destino = request.POST.get('directorio_destino')
+        cron = request.POST.get('frecuencia_cron')
+
+        origen = Server.objects.get(id=servidor_origen_id)
+        destino = Server.objects.get(id=servidor_destino_id)
+
+        nueva_conf = ConfiguracionRespaldo(
+            servidor_origen=origen,
+            servidor_destino=destino,
+            directorio_origen=dir_origen,
+            directorio_destino=dir_destino,
+            frecuencia_cron=cron
+        )
+        nueva_conf.save()
+
+        return redirect('servers_list') 
+
+    servidores = Server.objects.all()
+    return render(request, 'add_configuracion.html', {'servidores': servidores})

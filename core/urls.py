@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/reportar/<int:server_id>',views.reportar,name='reportar'),
     path('api/listaReportes',views.listar_reportes,name='listaReportes'),
     path('servers/reportes',views.desplegar_async),
+    path('configuracion/add/', views.add_configuracion, name='add_configuracion'),
 ]
