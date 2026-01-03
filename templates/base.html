@@ -25,10 +25,10 @@
                             <a class="nav-link" href="{% url 'server_list' %}">Servidores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Configuraciones de Respaldo</a>
+                            <a class="nav-link" href="{% url 'add_configuracion' %}">Configuraciones de Respaldo</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Reportes</a>
+                            <a class="nav-link" href="{% url 'desplegar_async' %}">Reportes</a>
                         </li>
                     {% endif %}
                 </ul>
