@@ -18,7 +18,7 @@
                         <select name="servidor_origen" class="form-select border-success" required>
                             <option value="">Seleccione el servidor...</option>
                             {% for s in servidores %}
-                                <option value="{{ s.id }}">{{ s.nombre }} — {{ s.ip }}</option>
+                                <option value="{{ s.id }}">{{ s.dominio_o_ip }} ({{ s.usuario_servidor }})</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -27,7 +27,7 @@
                         <select name="servidor_destino" class="form-select border-success" required>
                             <option value="">Seleccione el servidor...</option>
                             {% for s in servidores %}
-                                <option value="{{ s.id }}">{{ s.nombre }} — {{ s.ip }}</option>
+                                <option value="{{ s.id }}">{{ s.dominio_o_ip }} ({{ s.usuario_servidor }})</option>
                             {% endfor %}
                         </select>
                     </div>
