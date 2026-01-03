@@ -51,7 +51,10 @@ class ConfiguracionRespaldo(models.Model):
         verbose_name="Frecuencia (Cron)",
         help_text="Formato: min hora dia mes dia_semana (ej: 0 3 * * *)"
     )
-    
+    dst_user=models.CharField(
+        max_length=50,
+        verbose_name="Usuario destino",
+    )
     creado_en = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

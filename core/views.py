@@ -38,7 +38,6 @@ def add_server(request):
             usuario_servidor=usuario,
             contrasena_bot=contrasena
         )
-        automatizarServidor(nuevoServer)
         messages.success(request, 'Servidor añadido exitosamente.')
         return redirect('server_list')
 
@@ -132,6 +131,7 @@ def add_configuracion(request):
         dir_origen = request.POST.get('directorio_origen')
         dir_destino = request.POST.get('directorio_destino')
         cron = request.POST.get('frecuencia_cron')
+        dst_user=request.POST.get('dst_user')
 
         origen = Server.objects.get(id=servidor_origen_id)
         destino = Server.objects.get(id=servidor_destino_id)
@@ -141,10 +141,11 @@ def add_configuracion(request):
             servidor_destino=destino,
             directorio_origen=dir_origen,
             directorio_destino=dir_destino,
-            frecuencia_cron=cron
+            frecuencia_cron=cron,
+            dst_user=dst_user
         )
         nueva_conf.save()
-
+        automatizarServidor(nueva_conf)
         return redirect('servers_list') 
 
     servidores = Server.objects.all()
