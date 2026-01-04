@@ -180,7 +180,7 @@ def delete_configuracion(request, pk):
     if request.method == 'POST':
         config.delete()
         messages.success(request, 'Configuración de respaldo eliminada correctamente.')
-        return redirect('server_list')
+        return redirect('configuracion_list')
         
     return render(request, 'delete_config_confirm.html', {'config': config})
 
