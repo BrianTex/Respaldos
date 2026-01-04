@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Reportes de respaldos{% endblock %}
 
 {% block head_extra %}
-<script src="/static/js/json.js"></script>
+<script src="{% static 'js/json.js' %}"></script>
 {% endblock %}
 
-{% block contenido %}
+{% block content %}
 <div class="container mt-3">
   <h3>Reporte de ejecución de respaldos</h3>
   <table class="table table-hover">
@@ -26,4 +27,5 @@
   </table>
 </div>
 {% endblock %}
+ {% block scripts_extra %}<script src="{% static 'js/json.js' %}"></script>{% endblock %}
 

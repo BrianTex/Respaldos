@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from core.models import Server,Reporte
 from django.contrib import messages
 from django.http import JsonResponse
@@ -80,24 +81,24 @@ def delete_server(request, pk):
     return render(request, 'delete_server_confirm.html', {'server': server})
 
 #View que recibe la informaciòn mandada por el script 
-def reportar(request, server_id):
-    if request.method == 'POST':
-        token = request.POST.get('Autorizacion')
+@csrf_exempt
+def reportar(request,server_id):
+    if request.method=='POST':
+        token=request.META.get('HTTP_AUTORIZACION')
         try:
-            servidor = Server.objects.get(id=server_id)
-            
-            if servidor.contrasena_bot != token:
+            servidor=Server.objects.get(id=server_id)
+            if servidor.contrasena_bot!=token:
                 return JsonResponse({'error': 'Token inválido'}, status=403)
             
-            estado = request.POST.get('estado')
-            archivo = request.POST.get('archivo')
-            fecha = request.POST.get('fecha')
+            estado=request.POST.get('estado')
+            archivo=request.POST.get('archivo')
+            fecha=request.POST.get('fecha')
 
             Reporte.objects.create(
                 estado=estado,
                 archivo=archivo,
                 fecha=fecha,
-                idServer=servidor 
+                idServer=Server.objects.get(id=server_id)
             )
             return JsonResponse({'status': 'recibido'})
         except Server.DoesNotExist:
@@ -108,9 +109,9 @@ def serializar_a_json(querySet):
     for registro in querySet:
         d = {}
         d['estado'] = registro.estado
-        d['archivo'] = registro.address
-        d['fecha']  = registro.city
-        d['idServer'] = registro.idServer
+        d['archivo'] = registro.archivo
+        d['fecha']  = registro.fecha
+        d['idServer'] = registro.idServer.id
         datos.append(d)
     return datos
 

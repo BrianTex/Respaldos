@@ -1,8 +1,10 @@
 $(document).ready(function() {
     
     function cargarReportes() {
-        $.get("/api/listaReportes", function(datos, status) {
+        $.get("/api/listaReportes/", function(datos, status) {
             if (status === 'success') {
+                console.log(datos);
+                
                 let html = "";
                 
                 for (let i = 0; i < datos.length; i++) {
