@@ -11,4 +11,6 @@ urlpatterns = [
     path('api/listaReportes',views.listar_reportes,name='listaReportes'),
     path('servers/reportes',views.desplegar_async, name='desplegar_async'),
     path('configuracion/add/', views.add_configuracion, name='add_configuracion'),
+    path('configuracion/<int:pk>/delete/', views.delete_configuracion, name='delete_configuracion'),
+    path('configuracion/', views.configuracion_list, name='configuracion_list'),
 ]

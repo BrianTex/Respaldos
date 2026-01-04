@@ -1,21 +1,22 @@
 from .models import Server
-from django.template import Template,Context
+from django.template import Template, Context
 from django.template.loader import render_to_string
 import paramiko
+
 def generar_script_personalizado(conf):
     contexto = {
-        'server_src': Server.objects.get(id=conf.servidor_origen),
-        'server_dst':Server.objects.get(id=conf.servidor_destino),
+        'server_src': conf.servidor_origen,
+        'server_dst': conf.servidor_destino,
         'src_dir': conf.directorio_origen,
-        'dst_dir':conf.directorio_destino,
-        'dst_user':conf.dst_user,
+        'dst_dir': conf.directorio_destino,
+        'dst_user': conf.dst_user,
         'ip_central': '192.168.1.10' 
     }
     script_final = render_to_string('scripts/respaldo_template.sh', contexto)    
     return script_final
 
-def automatizar_con_llave(conf,script):
-    origen=Server.objects.get(id=conf.servidor_origen)
+def automatizar_con_llave(conf, script):
+    origen = conf.servidor_origen 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     
@@ -38,5 +39,5 @@ def automatizar_con_llave(conf,script):
     ssh.close()
 
 def automatizarServidor(conf):
-    script=generar_script_personalizado(conf)
-    automatizar_con_llave(conf,script)
+    script = generar_script_personalizado(conf)
+    automatizar_con_llave(conf, script)

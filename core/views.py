@@ -80,28 +80,28 @@ def delete_server(request, pk):
     return render(request, 'delete_server_confirm.html', {'server': server})
 
 #View que recibe la informaciòn mandada por el script 
-def reportar(request,server_id):
-    if request.method=='POST':
-        token=request.POST.get('Autorizacion')
+def reportar(request, server_id):
+    if request.method == 'POST':
+        token = request.POST.get('Autorizacion')
         try:
-            servidor=Server.objects.get(id=server_id)
-            if servidor.password_bot!=token:
+            servidor = Server.objects.get(id=server_id)
+            
+            if servidor.contrasena_bot != token:
                 return JsonResponse({'error': 'Token inválido'}, status=403)
             
-            estado=request.POST.get('estado')
-            archivo=request.POST.get('archivo')
-            fecha=request.POST.get('fecha')
+            estado = request.POST.get('estado')
+            archivo = request.POST.get('archivo')
+            fecha = request.POST.get('fecha')
 
             Reporte.objects.create(
                 estado=estado,
                 archivo=archivo,
                 fecha=fecha,
-                idServidor=server_id
+                idServer=servidor 
             )
             return JsonResponse({'status': 'recibido'})
         except Server.DoesNotExist:
             return JsonResponse({'error': 'Servidor no encontrado'}, status=404)
-
 
 def serializar_a_json(querySet):
     datos = []
@@ -126,40 +126,60 @@ def desplegar_async(request):
 @login_required
 def add_configuracion(request):
     if request.method == 'POST':
-        servidor_origen_id = request.POST.get('servidor_origen')
-        servidor_destino_id = request.POST.get('servidor_destino')
-        dir_origen = request.POST.get('directorio_origen')
-        dir_destino = request.POST.get('directorio_destino')
-        cron = request.POST.get('frecuencia_cron')
-        dst_user=request.POST.get('dst_user')
-
-        origen = Server.objects.get(id=servidor_origen_id)
-        destino = Server.objects.get(id=servidor_destino_id)
-
-        nueva_conf = ConfiguracionRespaldo(
-            servidor_origen=origen,
-            servidor_destino=destino,
-            directorio_origen=dir_origen,
-            directorio_destino=dir_destino,
-            frecuencia_cron=cron,
-            dst_user=dst_user
-        )
-        nueva_conf.save()
-        automatizarServidor(nueva_conf)
-        return redirect('servers_list') 
+        origen_id = request.POST.get('servidor_origen')
+        destino_id = request.POST.get('servidor_destino')
+        
+        if not origen_id or not destino_id:
+            messages.error(request, 'Debes seleccionar ambos servidores.')
+            servidores = Server.objects.all()
+            return render(request, 'add_configuracion.html', {'servidores': servidores})
+        
+        try:
+            servidor_origen = Server.objects.get(id=int(origen_id))
+            servidor_destino = Server.objects.get(id=int(destino_id))
+            
+            nueva_conf = ConfiguracionRespaldo(
+                servidor_origen=servidor_origen,
+                servidor_destino=servidor_destino,
+                directorio_origen=request.POST.get('directorio_origen', '').strip(),
+                directorio_destino=request.POST.get('directorio_destino', '').strip(),
+                frecuencia_cron=request.POST.get('frecuencia_cron', '').strip(),
+                dst_user=request.POST.get('dst_user', '').strip()
+            )
+            
+            nueva_conf.save()
+            
+            nueva_conf.refresh_from_db()
+            
+            automatizarServidor(nueva_conf)
+            
+            messages.success(request, '¡Configuración guardada y automatizada con éxito!')
+            return redirect('configuracion_list')
+            
+        except ValueError as e:
+            messages.error(request, f'Error en los datos proporcionados: {str(e)}')
+            servidores = Server.objects.all()
+            return render(request, 'add_configuracion.html', {'servidores': servidores})
+        except Server.DoesNotExist:
+            messages.error(request, 'Uno de los servidores seleccionados no existe.')
+            servidores = Server.objects.all()
+            return render(request, 'add_configuracion.html', {'servidores': servidores})
+        except Exception as e:
+            messages.error(request, f'Error inesperado: {str(e)}')
+            servidores = Server.objects.all()
+            return render(request, 'add_configuracion.html', {'servidores': servidores})
 
     servidores = Server.objects.all()
     return render(request, 'add_configuracion.html', {'servidores': servidores})
 
 @login_required
 def delete_configuracion(request, pk):
-    # Buscamos la configuración o lanzamos un 404 si no existe
     config = get_object_or_404(ConfiguracionRespaldo, pk=pk)
     
     if request.method == 'POST':
         config.delete()
         messages.success(request, 'Configuración de respaldo eliminada correctamente.')
-        return redirect('server_list') # O a la lista de configuraciones si ya la tienes
+        return redirect('server_list')
         
     return render(request, 'delete_config_confirm.html', {'config': config})
 

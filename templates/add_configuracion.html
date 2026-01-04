@@ -44,6 +44,12 @@
                 </div>
 
                 <div class="mb-4">
+                    <label class="form-label fw-bold">Usuario en el Servidor Destino</label>
+                        <input type="text" name="dst_user" class="form-control" placeholder="Ej: root o admin" required>
+                    <div class="form-text">El nombre de usuario con el que se accederá al servidor de destino.</div>
+                </div>
+                 
+                <div class="mb-4">
                     <label class="form-label fw-bold">Frecuencia de Ejecución (Cron)</label>
                     <input type="text" name="frecuencia_cron" class="form-control" placeholder="0 0 * * *" required>
                     <div class="form-text">Usa el formato estándar de Linux (Minuto Hora Día Mes Día_Semana).</div>
