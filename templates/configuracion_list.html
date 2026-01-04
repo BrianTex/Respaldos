@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-dark">Respaldos Automáticos Programados</h2>
+        <a href="{% url 'add_configuracion' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Nueva Configuración
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Origen</th>
+                        <th>Destino</th>
+                        <th>Ruta Origen</th>
+                        <th>Frecuencia (Cron)</th>
+                        <th>Usuario Destino</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in configuraciones %}
+                    <tr>
+                        <td><span class="badge bg-primary">{{ c.servidor_origen.dominio_o_ip }}</span></td>
+                        <td><span class="badge bg-secondary">{{ c.servidor_destino.dominio_o_ip }}</span></td>
+                        <td><code>{{ c.directorio_origen }}</code></td>
+                        <td><code>{{ c.frecuencia_cron }}</code></td>
+                        <td>{{ c.dst_user }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'delete_configuracion' c.id %}" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">
+                            No hay configuraciones de respaldo creadas aún.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

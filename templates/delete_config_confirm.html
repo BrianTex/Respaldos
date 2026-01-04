@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger shadow">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">¿Eliminar Configuración?</h4>
+                </div>
+                <div class="card-body">
+                    <p>Estás a punto de eliminar la automatización de respaldo:</p>
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item"><b>Origen:</b> {{ config.servidor_origen.dominio_o_ip }}</li>
+                        <li class="list-group-item"><b>Destino:</b> {{ config.servidor_destino.dominio_o_ip }}</li>
+                        <li class="list-group-item"><b>Ruta:</b> {{ config.directorio_origen }}</li>
+                    </ul>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
+                            <a href="{% url 'server_list' %}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -150,3 +150,20 @@ def add_configuracion(request):
 
     servidores = Server.objects.all()
     return render(request, 'add_configuracion.html', {'servidores': servidores})
+
+@login_required
+def delete_configuracion(request, pk):
+    # Buscamos la configuración o lanzamos un 404 si no existe
+    config = get_object_or_404(ConfiguracionRespaldo, pk=pk)
+    
+    if request.method == 'POST':
+        config.delete()
+        messages.success(request, 'Configuración de respaldo eliminada correctamente.')
+        return redirect('server_list') # O a la lista de configuraciones si ya la tienes
+        
+    return render(request, 'delete_config_confirm.html', {'config': config})
+
+@login_required
+def configuracion_list(request):
+    configuraciones = ConfiguracionRespaldo.objects.all()
+    return render(request, 'configuracion_list.html', {'configuraciones': configuraciones})
