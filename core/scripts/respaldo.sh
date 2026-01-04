@@ -19,4 +19,4 @@ else
   estado="$SALIDA"
 fi
 
-curl -X POST "$url_reporte" -H "Authorization: $passwd_reporte" -d "estado=${estado}&archivo=${archivo}&fecha=${fecha}"
+curl -X POST "$url_reporte" -H "Autorizacion: $passwd_reporte" -d "estado=${estado}&archivo=${archivo}&fecha=${fecha}"
