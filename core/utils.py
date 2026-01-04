@@ -10,9 +10,9 @@ def generar_script_personalizado(conf):
         'src_dir': conf.directorio_origen,
         'dst_dir': conf.directorio_destino,
         'dst_user': conf.dst_user,
-        'ip_central': '192.168.1.10' 
+        'ip_central': '127.0.0.1' 
     }
-    script_final = render_to_string('scripts/respaldo_template.sh', contexto)    
+    script_final = render_to_string('scripts/respaldo.sh', contexto)    
     return script_final
 
 def automatizar_con_llave(conf, script):
@@ -34,8 +34,13 @@ def automatizar_con_llave(conf, script):
     ssh.exec_command(f"chmod +x {ruta_script}")
 
     linea_cron = f"{conf.frecuencia_cron} {ruta_script}"
-    comando_cron = f'(crontab -l 2>/dev/null; echo "{linea_cron}") | crontab -'
-    ssh.exec_command(comando_cron)
+    comando_cron = f'{{ crontab -l 2>/dev/null; echo "{linea_cron}"; }} | sort -u | crontab -'
+
+    stdin, stdout, stderr = ssh.exec_command(comando_cron)
+    error_cron = stderr.read().decode()
+
+    if error_cron:
+        print(f"Error: {error_cron}")
     ssh.close()
 
 def automatizarServidor(conf):
