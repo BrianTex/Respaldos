@@ -46,3 +46,19 @@ def automatizar_con_llave(conf, script):
 def automatizarServidor(conf):
     script = generar_script_personalizado(conf)
     automatizar_con_llave(conf, script)
+
+def deleteConf(conf):
+    origen = conf.servidor_origen 
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    
+    ssh.connect(
+        origen.dominio_o_ip, 
+        username=origen.usuario_servidor, 
+        look_for_keys=True
+    )
+    ruta_script = f"/home/{origen.usuario_servidor}/respaldo_bot.sh"
+    ssh.exec_command(f"rm {ruta_script}")
+    comando_limpiar = f'{{ crontab -l 2>/dev/null; }} | grep -v "{ruta_script}" | crontab -'
+    ssh.exec_command(comando_limpiar)
+    ssh.close()

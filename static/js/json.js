@@ -8,7 +8,7 @@ $(document).ready(function() {
                 let html = "";
                 
                 for (let i = 0; i < datos.length; i++) {
-                    let claseFila = (datos[i].estado.toLowerCase() === 'El respaldo se realizó éxitosamente') 
+                    let claseFila = (datos[i].estado) === 'El respaldo se realizó éxitosamente'
                                     ? 'table-primary' 
                                     : 'table-danger';
 
