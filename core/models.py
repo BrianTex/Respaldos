@@ -18,7 +18,7 @@ class Server(models.Model):
 class Reporte(models.Model):
     estado= models.CharField(max_length=100,verbose_name='Estado del servidor')
     archivo=models.CharField(max_length=50,verbose_name='Nombre del archivo o directorio')
-    fecha=models.DateField()
+    fecha=models.DateTimeField()
     idServer=models.ForeignKey(Server, on_delete=models.CASCADE)
 
 
